@@ -1,72 +1,81 @@
 # Endurance Testing Report
 
-## 1️⃣ General Information
+## Test Overview
 
-✅ **Test Type**: Endurance Testing  
-✅ **Objective**: Evaluate the system's performance and stability over an extended period under continuous load.  
-✅ **Tool Used**: JMeter 5.6.3 + Stepping Thread Group  
-✅ **Target Website**: `fdout.pl`
+🟢 **Test Type:** Endurance Testing  
+🟢 **Objective:** Assess the stability and performance of the system over an extended period under sustained load.  
+🟢 **Tool Used:** JMeter 5.6.3 + Stepping Thread Group  
+🟢 **Target Website:** [fdout.pl](https://fdout.pl)  
 
-## 2️⃣ Test Parameters
+---
 
-📌 **Number of Users (Threads)**: 50  
-📌 **Ramp-up Time**: 10 minutes (gradual increase of users)  
-📌 **Test Duration**: 60 minutes  
-📌 **Sustained Load**: Users continuously interacting with the system for 60 minutes  
-📌 **Gradual Exit Strategy**: Decreasing 5 users every minute until completion  
+## Test Parameters
 
-## 3️⃣ Test Execution Process
+🔹 **Number of Users (Threads):** 20  
+🔹 **Ramp-up Time:** 5 sec (time taken to start the test)  
+🔹 **Load Increase Strategy:** 10 threads added every 30 seconds  
+🔹 **Test Duration:** 30 minutes  
+🔹 **Cooldown Strategy:** Reducing 5 threads per second  
 
-1️⃣ **Test starts with 0 active users.**  
-2️⃣ **Every 1 minute, 5 new users are added until reaching 50 users.**  
-3️⃣ **All users interact with the system continuously for 60 minutes.**  
-4️⃣ **Gradual user exit – 5 users leave every minute until completion.**  
+---
 
-## 4️⃣ Test Results
+## How the Test Works
 
-📌 **Full Report**: [Endurance Test Report](https://qa-15.github.io/JMeter_Test_Reports/index.html)  
+1️⃣ **Test starts with zero active users (0 threads).**  
+2️⃣ **Every 30 seconds, 10 new users are added until reaching 20 concurrent users.**  
+3️⃣ **Users continuously interact with the website for 30 minutes.**  
+4️⃣ **Gradual cooldown, reducing 5 users per second until all users disconnect.**  
 
-### Key Metrics
-| Metric                     | Expected Value | Actual Value | Status |
-|----------------------------|---------------|-------------|--------|
-| ✅ Average Response Time  | < 3 sec       | 5.2 sec     | ❌ |
-| ✅ Maximum Response Time  | < 8 sec       | 12.8 sec    | ❌ |
-| ✅ Throughput (TPS)       | > 5 requests/sec | 3.2 requests/sec | ❌ |
+---
 
-## 5️⃣ Graphical Analysis
+## Test Results
 
-### Response Times Over Time  
-📉 **Observation**: Response time increased steadily as test progressed.  
-📍 **Initial response time**: 1500 ms (acceptable)  
-📍 **Final response time**: 12,800 ms (critical degradation)  
-🔴 **Conclusion**: Severe performance degradation after 30 minutes of sustained load.
+| Metric                      | Expected Value | Actual Value |
+|-----------------------------|---------------|-------------|
+| ✅ Average Response Time     | < 5 sec       | **32 sec ❌** |
+| ✅ Maximum Response Time     | < 10 sec      | **83 sec ❌** |
+| ✅ Throughput (Requests/sec) | > 10 req/sec  | **1.87 req/sec ❌** |
 
-### Hits Per Second (Requests Per Second)  
-📍 **Initial peak**: 4.8 requests/sec  
-📍 **Stabilization**: 3.2 requests/sec  
-📍 **Drop near end of test**: Indicates possible database or server resource exhaustion.  
+---
 
-## 6️⃣ Key Findings & Issues
+## Graphical Analysis
 
-⚠️ **Severe performance degradation over time** – response time increased by 6x.  
-⚠️ **Low Throughput (TPS)** – the system handled fewer requests than expected.  
-⚠️ **Potential memory leaks or DB bottlenecks** – sudden spikes in response times.  
+📊 **Response Times Over Time:** Response times increased with load. Initial response: **10,000ms (10 sec)** (acceptable), final response: **70,000ms (70 sec)** (critical).  
+📊 **Hits Per Second:** Load peaked at **2.5 requests/sec**, later stabilizing at **1.8–2.3 requests/sec**. A sharp drop at the end suggests **server resource constraints or database bottlenecks**.  
 
-## 7️⃣ Recommendations for Performance Improvement
+---
 
-✔ **Optimize database queries** – slow SQL queries may be affecting performance.  
-✔ **Implement caching mechanisms** – reduce repeated expensive queries.  
-✔ **Scale infrastructure** – increase CPU/RAM if server resources are exhausted.  
-✔ **Check load balancing** – verify if some components are overloaded.  
+## Key Issues Identified
 
-## ✅ Conclusion
-📌 **Endurance testing revealed significant performance bottlenecks.**  
-📌 **Response time increased beyond acceptable limits, indicating scalability issues.**  
-📌 **Further optimization of server resources and database is required.**  
+⚠️ **Very High Average Response Time** (32 sec instead of <5 sec).  
+⚠️ **Low Throughput (1.87 TPS)** – API processes too few requests.  
+⚠️ **Response Time Increased 7x** compared to the initial state.  
+⚠️ **Maximum Response Time Peaked at 83 sec**, which is extremely slow.  
 
-🔥 **Next Steps:**  
-1️⃣ Discuss results with DevOps and Backend teams.  
-2️⃣ Prioritize improvements in performance optimization.  
-3️⃣ Re-run endurance testing after optimizations.  
+---
+
+## Recommendations for Improvement
+
+✅ **Optimize Database Queries** – slow SQL queries or indexing issues might be causing delays.  
+✅ **Use Caching** – caching requests can reduce database load.  
+✅ **Scale Server Infrastructure** – the server might lack CPU/RAM resources.  
+✅ **Load Balancing Check** – sudden performance drops may indicate **overloaded system components**.  
+
+---
+
+## Conclusion
+
+✅ **Significant performance issues detected.**  
+✅ **Response times exceed acceptable limits.**  
+✅ **Throughput is critically low,** meaning the system struggles with load.  
+✅ **Urgent optimization of server resources and database is required.**  
+
+🔥 **Next Steps:**
+1️⃣ **Discuss results with the team** (DevOps, Backend).  
+2️⃣ **Prioritize performance improvements.**  
+3️⃣ **Run another endurance test after optimization.**  
+
+---
+ 
 
 

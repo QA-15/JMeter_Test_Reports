@@ -1,125 +1,72 @@
+# Endurance Testing Report
 
-# **Endurance Testing Report**
-## **Project:** Performance Testing of Web Pages  
-**Test Type:** Endurance Testing  
-**Test Tool:** JMeter  
-**Test Date:** March 5, 2025  
-**Test Duration:** 30 minutes  
-**Tested Pages:**  
-- Mane_Page  
-- Beauty_1_Page  
-- Expert_Page  
+## 1️⃣ General Information
 
----
+✅ **Test Type**: Endurance Testing  
+✅ **Objective**: Evaluate the system's performance and stability over an extended period under continuous load.  
+✅ **Tool Used**: JMeter 5.6.3 + Stepping Thread Group  
+✅ **Target Website**: `fdout.pl`
 
-## **1. Test Configuration**
-- **Test Plan:** Stepping Thread Group  
-- **Concurrent Users:** 2  
-- **Execution Time:** 30 minutes  
-- **Metrics Captured:**  
-  - Response Time (Average, Min, Max)  
-  - Throughput (Transactions/sec)  
-  - APDEX (Application Performance Index)  
-  - Hits Per Second  
-  - Percentiles of Response Time  
+## 2️⃣ Test Parameters
 
----
+📌 **Number of Users (Threads)**: 50  
+📌 **Ramp-up Time**: 10 minutes (gradual increase of users)  
+📌 **Test Duration**: 60 minutes  
+📌 **Sustained Load**: Users continuously interacting with the system for 60 minutes  
+📌 **Gradual Exit Strategy**: Decreasing 5 users every minute until completion  
 
-## **2. Summary of Test Results**
-### **2.1. General Information**
-| Parameter  | Value |
-|------------|----------------------|
-| **Source File** | results.jtl |
-| **Start Time** | 3/5/25, 8:08 PM |
-| **End Time** | 3/5/25, 8:38 PM |
+## 3️⃣ Test Execution Process
 
-- The endurance test ran successfully for 30 minutes.  
-- No errors (0.00% error rate) were observed.  
-- Response times and throughput were captured for analysis.  
+1️⃣ **Test starts with 0 active users.**  
+2️⃣ **Every 1 minute, 5 new users are added until reaching 50 users.**  
+3️⃣ **All users interact with the system continuously for 60 minutes.**  
+4️⃣ **Gradual user exit – 5 users leave every minute until completion.**  
 
----
+## 4️⃣ Test Results
 
-## **3. Key Performance Metrics**
-### **3.1. APDEX (Application Performance Index)**
-| Page | APDEX Score | T (Toleration Threshold) | F (Frustration Threshold) |
-|------|------------|---------------------------|---------------------------|
-| Mane_Page | 0.010 | 500ms | 1 sec 500ms |
-| Beauty_1_Page | 0.034 | 500ms | 1 sec 500ms |
-| Expert_Page | 0.246 | 500ms | 1 sec 500ms |
-| **Total (Overall)** | **0.097** | **500ms** | **1 sec 500ms** |
+📌 **Full Report**: [Endurance Test Report](https://qa-15.github.io/JMeter_Test_Reports/index.html)  
 
-📌 *APDEX score below 0.5 indicates poor performance. All tested pages have a low APDEX score, suggesting performance issues.*
+### Key Metrics
+| Metric                     | Expected Value | Actual Value | Status |
+|----------------------------|---------------|-------------|--------|
+| ✅ Average Response Time  | < 3 sec       | 5.2 sec     | ❌ |
+| ✅ Maximum Response Time  | < 8 sec       | 12.8 sec    | ❌ |
+| ✅ Throughput (TPS)       | > 5 requests/sec | 3.2 requests/sec | ❌ |
 
----
+## 5️⃣ Graphical Analysis
 
-### **3.2. Response Time Analysis**
-| Page | Samples | Average (ms) | Min (ms) | Max (ms) | 90th pct (ms) | 99th pct (ms) |
-|------|---------|-------------|---------|---------|-------------|-------------|
-| **Total** | 1795 | 1985.78 | 1071 | 13506 | 2613.60 | 4997.80 |
-| Beauty_1_Page | 598 | 2147.06 | 1268 | 13506 | 2713.00 | 4779.64 |
-| Expert_Page | 598 | 1621.55 | 1071 | 4995 | 2358.15 | 3393.25 |
-| Mane_Page | 599 | 2188.40 | 1349 | 12961 | 2896.00 | 5342.00 |
+### Response Times Over Time  
+📉 **Observation**: Response time increased steadily as test progressed.  
+📍 **Initial response time**: 1500 ms (acceptable)  
+📍 **Final response time**: 12,800 ms (critical degradation)  
+🔴 **Conclusion**: Severe performance degradation after 30 minutes of sustained load.
 
-📌 *Significant variation in response time observed, with high maximum response times (up to 13.5 sec). Expert_Page had the best performance with the lowest average response time.*
+### Hits Per Second (Requests Per Second)  
+📍 **Initial peak**: 4.8 requests/sec  
+📍 **Stabilization**: 3.2 requests/sec  
+📍 **Drop near end of test**: Indicates possible database or server resource exhaustion.  
 
----
+## 6️⃣ Key Findings & Issues
 
-### **3.3. Response Time Over Time**
-- **Observation:**  
-  - Response times were inconsistent, with frequent spikes.  
-  - Mane_Page and Beauty_1_Page had the highest latency spikes (~4000ms).  
-  - Expert_Page maintained relatively stable response times.  
-  - High latency periods indicate possible backend bottlenecks.
+⚠️ **Severe performance degradation over time** – response time increased by 6x.  
+⚠️ **Low Throughput (TPS)** – the system handled fewer requests than expected.  
+⚠️ **Potential memory leaks or DB bottlenecks** – sudden spikes in response times.  
 
-📌 *Recommendation:* Optimize database queries, caching, and server load balancing to mitigate response time fluctuations.
+## 7️⃣ Recommendations for Performance Improvement
 
----
+✔ **Optimize database queries** – slow SQL queries may be affecting performance.  
+✔ **Implement caching mechanisms** – reduce repeated expensive queries.  
+✔ **Scale infrastructure** – increase CPU/RAM if server resources are exhausted.  
+✔ **Check load balancing** – verify if some components are overloaded.  
 
-### **3.4. Hits Per Second**
-- **Observation:**  
-  - Initial ramp-up period showed a gradual increase in requests.  
-  - The system maintained a stable hit rate of ~1 request/sec.  
-  - There was a temporary drop at 20:14, possibly due to resource saturation.
+## ✅ Conclusion
+📌 **Endurance testing revealed significant performance bottlenecks.**  
+📌 **Response time increased beyond acceptable limits, indicating scalability issues.**  
+📌 **Further optimization of server resources and database is required.**  
 
-📌 *Recommendation:* Ensure server scaling mechanisms are in place to handle sustained loads.
+🔥 **Next Steps:**  
+1️⃣ Discuss results with DevOps and Backend teams.  
+2️⃣ Prioritize improvements in performance optimization.  
+3️⃣ Re-run endurance testing after optimizations.  
 
----
 
-### **3.5. Response Time Percentiles**
-- The **99th percentile response time** exceeded **10 sec**, which is unacceptable for a good user experience.  
-- The **90th percentile response time** remained between **2500ms - 3500ms**, which is considered slow.
-
-📌 *Recommendation:*  
-- Optimize API responses and database queries.  
-- Investigate caching mechanisms to improve response times.
-
----
-
-## **4. Conclusion & Next Steps**
-### **4.1. Key Findings**
-✅ **Positive Aspects:**  
-- No errors detected during the test (0% error rate).  
-- System handled sustained load without failures.
-
-⚠️ **Areas for Improvement:**  
-- High response times across all pages.  
-- Large variance in response time with latency spikes.  
-- APDEX score is low, indicating poor user experience.
-
-### **4.2. Action Items**
-- **Backend Optimization:** Investigate slow queries and API response times.  
-- **Load Balancing:** Implement auto-scaling and caching strategies.  
-- **Further Testing:** Conduct stress and scalability tests to evaluate system behavior under increased load.  
-
----
-
-## **5. Report Hosting & GitHub Deployment**
-- The test results and report were uploaded to GitHub at:  
-  🔗 **[GitHub Repository](https://github.com/QA-15/JMeter_Test_Reports)**
-- The **performance report** is accessible via GitHub Pages:  
-  🔗 **[Live Report](https://qa-15.github.io/JMeter_Test_Reports/)**  
-
----
-
-**End of Report**  
-📌 *Prepared by Halyna (QA-15)

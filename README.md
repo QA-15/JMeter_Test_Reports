@@ -93,6 +93,8 @@
 2️⃣ Prioritize performance improvements.  
 3️⃣ Rerun the endurance test after optimizations.  
 
+📌 Full Report: Endurance Test Report
+https://qa-15.github.io/JMeter_Test_Reports/
 
 
 
